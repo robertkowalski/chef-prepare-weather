@@ -17,8 +17,20 @@
 # limitations under the License.
 #
 
+# create directory data
 directory '/data' do
   owner 'pi'
   group 'www-data'
+  action :create
+end
+
+# add cronjob
+cron 'temp_to_csv' do
+  minute '30'
+  hour '*'
+  day '*'
+  month '*'
+  weekday '*'
+  command 'node /home/pi/node_modules/index.js'
   action :create
 end

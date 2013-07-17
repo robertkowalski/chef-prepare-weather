@@ -21,4 +21,8 @@ describe 'The recipe chef-prepare-weather::default' do
     directory = chef_run.directory('/data')
     expect(directory).to be_owned_by('pi', 'www-data')
   end
+
+  it 'creates a cronjob named "temp_to_csv"' do
+    expect(chef_run).to create_cron 'temp_to_csv'
+  end
 end
