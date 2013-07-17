@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: skeleton
-# Attributes:: default
+# Cookbook Name:: chef-prepare-weather
+# Recipe:: default
 #
-# Copyright (C) YEAR YOUR_NAME <YOUR_EMAIL>
+# Copyright (C) 2013 Robert Kowalski <rok@kowalski.gd>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,5 +16,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# Set meaningful node attributes here

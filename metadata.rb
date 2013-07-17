@@ -1,11 +1,10 @@
-name              'skeleton'
-maintainer        'YOUR NAME'
-maintainer_email  'YOUR EMAIL'
+name              'chef-prepare-weather'
+maintainer        'Robert Kowalski'
+maintainer_email  'rok@kowalski.gd'
 license           'Apache 2.0'
 description       'Installs/configures something'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version           '1.0.0'
-recipe            'skeleton::default', 'Installs/configures something'
+recipe            'chef-prepare-weather::default', 'Prepares everything the weather server needs (directories)'
 
-supports 'debian'
-supports 'ubuntu'
+supports 'raspbian'
