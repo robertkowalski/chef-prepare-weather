@@ -26,11 +26,9 @@ end
 
 # add cronjob
 cron 'temp_to_csv' do
-  minute '30'
+  minute '0'
   hour '*'
-  day '*'
-  month '*'
-  weekday '*'
-  command 'node /home/pi/node_modules/index.js'
+  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /tmp/node_debug.log 2>&1'
   action :create
+  user 'pi'
 end
