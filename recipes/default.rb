@@ -17,9 +17,13 @@
 # limitations under the License.
 #
 
-# create directory data
+user 'node' do
+  action :create
+end
+
+# create directory /data
 directory '/data' do
-  owner 'pi'
+  owner 'node'
   group 'www-data'
   action :create
 end
@@ -27,8 +31,7 @@ end
 # add cronjob
 cron 'temp_to_csv' do
   minute '0'
-  hour '*'
   command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /tmp/node_debug.log 2>&1'
   action :create
-  user 'pi'
+  user 'node'
 end
