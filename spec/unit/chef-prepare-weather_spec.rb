@@ -22,6 +22,15 @@ describe 'The recipe chef-prepare-weather::default' do
     expect(directory).to be_owned_by('node', 'www-data')
   end
 
+  it 'creates the directory "/var/www"' do
+    expect(chef_run).to create_directory '/var/www'
+  end
+
+  it 'the directory is owned by user node and group www-data' do
+    directory = chef_run.directory('/var/www')
+    expect(directory).to be_owned_by('node', 'www-data')
+  end
+
   it 'creates a cronjob named "temp_to_csv"' do
     expect(chef_run).to create_cron 'temp_to_csv'
   end

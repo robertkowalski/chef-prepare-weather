@@ -9,4 +9,7 @@ describe 'raspberry pi' do
     it { should have_entry('0 * * * * /opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /tmp/node_debug.log 2>&1').with_user('node') }
   end
 
+  describe file('/var/www') do
+    it { should be_directory }
+  end
 end

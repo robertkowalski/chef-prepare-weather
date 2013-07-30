@@ -28,6 +28,13 @@ directory '/data' do
   action :create
 end
 
+# create directory /var/www
+directory '/var/www' do
+  owner 'node'
+  group 'www-data'
+  action :create
+end
+
 # add cronjob
 cron 'temp_to_csv' do
   minute '0'
