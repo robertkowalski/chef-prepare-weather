@@ -34,4 +34,13 @@ describe 'The recipe chef-prepare-weather::default' do
   it 'creates a cronjob named "temp_to_csv"' do
     expect(chef_run).to create_cron 'temp_to_csv'
   end
+
+  it 'creates a file: /var/log/templogger.log' do
+    expect(chef_run).to create_file '/var/log/templogger.log'
+  end
+
+  it '/var/log/templogger.log is owned by the user node' do
+    file = chef_run.file('/var/log/templogger.log')
+    expect(file).to be_owned_by('node', 'root')
+  end
 end

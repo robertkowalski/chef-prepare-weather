@@ -35,10 +35,18 @@ directory '/var/www' do
   action :create
 end
 
+# create file /var/log/templogger.log
+file '/var/log/templogger.log' do
+  owner 'node'
+  group 'root'
+  action :create
+end
+
+
 # add cronjob
 cron 'temp_to_csv' do
   minute '0'
-  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /tmp/node_debug.log 2>&1'
+  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /var/log/templogger.log 2>&1'
   action :create
   user 'node'
 end
