@@ -1,3 +1,8 @@
+1.0.3
+---
+ - create /var/www (Webservices)
+ - create user node (General)
+ - log to /var/log/templogger.log (Temperature Logger)
 
 1.0.2
 ---
