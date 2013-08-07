@@ -42,7 +42,6 @@ file '/var/log/templogger.log' do
   action :create
 end
 
-
 # add cronjob
 cron 'temp_to_csv' do
   minute '0'
@@ -50,3 +49,5 @@ cron 'temp_to_csv' do
   action :create
   user 'node'
 end
+
+include_recipe 'nginx'

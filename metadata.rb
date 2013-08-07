@@ -8,3 +8,5 @@ version           '1.0.3'
 recipe            'chef-prepare-weather::default', 'Prepares everything the weather server needs (directories, cronjob)'
 
 supports 'raspbian'
+
+depends 'nginx'
