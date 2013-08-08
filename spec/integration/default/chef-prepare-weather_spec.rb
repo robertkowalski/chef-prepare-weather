@@ -18,8 +18,7 @@ describe 'raspberry pi' do
     it { should be_owned_by 'node' }
   end
 
-  # nginx installed
-  describe file('/etc/init.d/nginx') do
-    it { should be_file }
+  describe package('nginx') do
+    it { should be_installed }
   end
 end
