@@ -51,3 +51,4 @@ cron 'temp_to_csv' do
 end
 
 include_recipe 'nginx'
+include_recipe 'git'
