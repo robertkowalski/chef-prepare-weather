@@ -43,4 +43,9 @@ describe 'The recipe chef-prepare-weather::default' do
     file = chef_run.file('/var/log/templogger.log')
     expect(file).to be_owned_by('node', 'root')
   end
+
+  it '/var/log/raspi_weather_webservice_api.log is owned by the user node' do
+    file = chef_run.file('/var/log/raspi_weather_webservice_api.log')
+    expect(file).to be_owned_by('node', 'root')
+  end
 end

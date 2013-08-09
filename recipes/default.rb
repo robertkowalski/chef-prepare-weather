@@ -19,6 +19,8 @@
 
 user 'node' do
   action :create
+  home '/home/node'
+  supports  :manage_home => true
 end
 
 # create directory /data
@@ -52,3 +54,46 @@ end
 
 include_recipe 'nginx'
 include_recipe 'git'
+
+if node['kernel']['machine'] == 'arm61'
+  include_recipe 'nodejs::install_from_source'
+else
+  include_recipe 'nodejs::install_from_binary'
+end
+
+ssh_known_hosts_entry 'github.com'
+
+# create file /var/log/raspi_weather_webservice_api.log
+file '/var/log/raspi_weather_webservice_api.log' do
+  owner 'node'
+  group 'root'
+  action :create
+end
+
+template 'service' do
+  path '/etc/init.d/raspi_weather_webservice_api'
+  source 'service.erb'
+  owner 'node'
+  group 'root'
+  mode  '0755'
+  variables({
+    :appname => 'raspi_weather_webservice_api',
+    :serverfile => 'app.js'
+  })
+end
+
+deploy '/var/www/raspi-weather-webservice-api' do
+  repo 'https://github.com/robertkowalski/raspi-weather-webservice-api.git'
+  revision 'HEAD'
+  enable_submodules true
+  shallow_clone true
+  keep_releases 10
+  action :deploy
+  migrate false
+  restart_command '/etc/init.d/raspi_weather_webservice_api restart'
+  scm_provider Chef::Provider::Git
+  symlink_before_migrate.clear
+  create_dirs_before_symlink.clear
+  purge_before_symlink.clear
+  symlinks.clear
+end

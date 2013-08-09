@@ -25,4 +25,20 @@ describe 'raspberry pi' do
   describe package('git') do
     it { should be_installed }
   end
+
+  describe file('/var/www/raspi-weather-webservice-api') do
+    it { should be_directory }
+    it { should be_owned_by 'node' }
+  end
+
+  describe file('/etc/init.d/raspi_weather_webservice_api') do
+    it { should be_file }
+    it { should be_owned_by 'node' }
+  end
+
+  describe file('/var/log/raspi_weather_webservice_api.log') do
+    it { should be_file }
+    it { should be_owned_by 'node' }
+  end
+
 end

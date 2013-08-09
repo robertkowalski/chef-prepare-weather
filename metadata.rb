@@ -11,3 +11,4 @@ supports 'raspbian'
 
 depends 'nginx'
 depends 'git'
+depends 'nodejs'
