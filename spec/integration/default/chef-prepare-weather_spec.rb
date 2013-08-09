@@ -25,4 +25,8 @@ describe 'raspberry pi' do
   describe package('git') do
     it { should be_installed }
   end
+
+  describe file('/usr/local/bin/node') do
+    it { should be_file }
+  end
 end

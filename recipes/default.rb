@@ -52,3 +52,9 @@ end
 
 include_recipe 'nginx'
 include_recipe 'git'
+
+if node['kernel']['machine'] == 'armv6l'
+  include_recipe 'nodejs::install_from_source'
+else
+  include_recipe 'nodejs::install_from_binary'
+end
