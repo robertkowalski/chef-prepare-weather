@@ -43,4 +43,12 @@ describe 'The recipe chef-prepare-weather::default' do
     file = chef_run.file('/var/log/templogger.log')
     expect(file).to be_owned_by('node', 'root')
   end
+
+  it 'installs nginx' do
+    expect(chef_run).to install_package 'nginx'
+  end
+
+  it 'installs git' do
+    expect(chef_run).to install_package 'git'
+  end
 end
