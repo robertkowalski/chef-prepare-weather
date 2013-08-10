@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/robertkowalski/chef-prepare-weather.png?branch=master)](https://travis-ci.org/robertkowalski/chef-prepare-weather)
+
 chef-prepare-weather
 ===
 
