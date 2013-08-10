@@ -19,6 +19,8 @@
 
 user 'node' do
   action :create
+  home '/home/node'
+  supports :manage_home => true
 end
 
 # create directory /data
@@ -61,3 +63,58 @@ end
 
 include_recipe 'ssh_known_hosts'
 ssh_known_hosts_entry 'github.com'
+
+cmd  = "npm install -g forever"
+execute "install NPM package forever" do
+  command cmd
+end
+
+file '/var/log/raspi_weather_webservice_api.log' do
+  owner 'node'
+  group 'root'
+  action :create
+end
+
+template 'service' do
+  path '/etc/init.d/raspi_weather_webservice_api'
+  source 'service.erb'
+  owner 'node'
+  group 'root'
+  mode  '0755'
+  variables({
+    :appname => 'raspi_weather_webservice_api',
+    :appdir => 'raspi-weather-webservice-api',
+    :serverfile => 'app.js'
+  })
+end
+
+file '/etc/nginx/sites-enabled/default' do
+  action :delete
+end
+
+template 'raspi-weather-webservice-api' do
+  path '/etc/nginx/sites-available/weather_api'
+  source 'site.erb'
+  owner 'root'
+  group 'root'
+end
+
+link '/etc/nginx/sites-enabled/weather_api' do
+  to '/etc/nginx/sites-available/weather_api'
+end
+
+deploy '/var/www/raspi-weather-webservice-api' do
+  repo 'https://github.com/robertkowalski/raspi-weather-webservice-api.git'
+  revision 'HEAD'
+  enable_submodules true
+  shallow_clone true
+  keep_releases 10
+  action :deploy
+  migrate false
+  restart_command '/etc/init.d/raspi_weather_webservice_api restart'
+  scm_provider Chef::Provider::Git
+  symlink_before_migrate.clear
+  create_dirs_before_symlink.clear
+  purge_before_symlink.clear
+  symlinks.clear
+end

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+DIR=/var/www/<%= @appdir %>/current
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NODE_PATH=/usr/local/lib/node_modules
+APP_FILE=<%= @serverfile %>
+PIDFILE=/var/run/<%= @appname %>.pid
+LOGFILE=/var/log/<%= @appname %>.log
+
+
+function start_app {
+  echo "starting <%= @appdir %>"
+  forever --pidFile $PIDFILE --sourceDir $DIR -a -l $LOGFILE --minUptime 1000 --spinSleepTime 2000 start $APP_FILE &
+}
+
+function stop_app {
+  if [ -f $PIDFILE ]; then
+    echo "stopping <%= @appdir %>"
+    forever stop $APP_FILE
+    rm -f $PIDFILE
+    RETVAL=$?
+  else
+    echo "<%= @appdir %> is not running"
+    RETVAL=0
+  fi
+}
+
+case $1 in
+  start)
+    start_app ;;
+  stop)
+    stop_app ;;
+  restart)
+    stop_app
+    start_app
+    ;;
+  *)
+    echo "usage: <%= @appname %> {start|stop|restart}" ;;
+esac
+exit 0
+

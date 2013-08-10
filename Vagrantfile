@@ -5,6 +5,8 @@ Vagrant.configure('2') do |config|
   config.vm.box_url = 'https://jimdo-vagrant-boxes.s3.amazonaws.com/jimdo-debian-7.0.0.box'
   config.vm.hostname = 'skeleton-debian'
 
+  config.vm.network :private_network, ip: '192.168.10.200'
+
   # Enable Berkshelf plugin which will make cookbooks available to Vagrant
   config.berkshelf.enabled = true
 

@@ -51,4 +51,14 @@ describe 'The recipe chef-prepare-weather::default' do
   it 'installs git' do
     expect(chef_run).to install_package 'git'
   end
+
+  it '/var/log/raspi_weather_webservice_api.log is owned by the user node' do
+    file = chef_run.file('/var/log/raspi_weather_webservice_api.log')
+    expect(file).to be_owned_by('node', 'root')
+  end
+
+  it '/etc/nginx/sites-enabled/default' do
+    expect(chef_run).to delete_file '/etc/nginx/sites-enabled/default'
+  end
+
 end
