@@ -29,4 +29,8 @@ describe 'raspberry pi' do
   describe file('/usr/local/bin/node') do
     it { should be_file }
   end
+
+  describe file('/etc/ssh/ssh_known_hosts') do
+    it { should contain 'github.com' }
+  end
 end

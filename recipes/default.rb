@@ -58,3 +58,6 @@ if node['kernel']['machine'] == 'armv6l'
 else
   include_recipe 'nodejs::install_from_binary'
 end
+
+include_recipe 'ssh_known_hosts'
+ssh_known_hosts_entry 'github.com'
