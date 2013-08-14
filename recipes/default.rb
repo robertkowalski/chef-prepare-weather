@@ -55,7 +55,6 @@ end
 include_recipe 'nginx'
 include_recipe 'git'
 
-default_attributes({'nodejs' => {'check_sha' => false}})
 include_recipe 'nodejs::install_from_binary'
 
 include_recipe 'ssh_known_hosts'
