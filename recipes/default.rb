@@ -54,12 +54,7 @@ end
 
 include_recipe 'nginx'
 include_recipe 'git'
-
-if node['kernel']['machine'] == 'armv6l'
-  include_recipe 'nodejs::install_from_source'
-else
-  include_recipe 'nodejs::install_from_binary'
-end
+include_recipe 'nodejs::install_from_binary'
 
 include_recipe 'ssh_known_hosts'
 ssh_known_hosts_entry 'github.com'
