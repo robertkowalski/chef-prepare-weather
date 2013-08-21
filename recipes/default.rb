@@ -89,7 +89,7 @@ end
 template 'service' do
   path '/etc/init.d/raspi_weather_webservice_api'
   source 'service.erb'
-  owner 'node'
+  owner 'root'
   group 'root'
   mode  '0755'
   variables({
@@ -122,7 +122,12 @@ deploy '/var/www/raspi-weather-webservice-api' do
   keep_releases 10
   action :deploy
   migrate false
-  restart_command '/etc/init.d/raspi_weather_webservice_api restart'
+  restart_command do
+    service 'raspi_weather_webservice_api' do
+      supports :start => true, :stop => true, :restart => true, :status => true
+      action [ :enable, :restart ]
+    end
+  end
   scm_provider Chef::Provider::Git
   symlink_before_migrate.clear
   create_dirs_before_symlink.clear
@@ -135,7 +140,4 @@ service 'nginx' do
   action [ :restart ]
 end
 
-service 'raspi_weather_webservice_api' do
-  supports :status => true, :restart => true
-  action [ :enable, :start ]
-end
+

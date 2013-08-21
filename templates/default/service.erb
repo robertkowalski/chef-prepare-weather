@@ -10,7 +10,7 @@ LOGFILE=/var/log/<%= @appname %>.log
 
 function start_app {
   echo "starting <%= @appdir %>"
-  forever --pidFile $PIDFILE --sourceDir $DIR -a -l $LOGFILE --minUptime 1000 --spinSleepTime 2000 start $APP_FILE &
+  forever --pidFile $PIDFILE --sourceDir $DIR -a -l $LOGFILE start $APP_FILE
 }
 
 function stop_app {
@@ -18,10 +18,18 @@ function stop_app {
     echo "stopping <%= @appdir %>"
     forever stop $APP_FILE
     rm -f $PIDFILE
-    RETVAL=$?
   else
     echo "<%= @appdir %> is not running"
-    RETVAL=0
+  fi
+}
+
+function status_app {
+  if [ -f $PIDFILE ]; then
+    echo "app running"
+    exit 0
+  else
+    echo "app not running"
+    exit 1
   fi
 }
 
@@ -30,12 +38,16 @@ case $1 in
     start_app ;;
   stop)
     stop_app ;;
+  status)
+    status_app ;;
   restart)
     stop_app
     start_app
     ;;
   *)
-    echo "usage: <%= @appname %> {start|stop|restart}" ;;
+    echo "usage: <%= @appname %> {start|stop|restart}"
+    exit 1
+    ;;
 esac
 exit 0
 

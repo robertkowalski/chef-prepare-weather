@@ -40,7 +40,7 @@ describe 'raspberry pi' do
 
   describe file('/etc/init.d/raspi_weather_webservice_api') do
     it { should be_file }
-    it { should be_owned_by 'node' }
+    it { should be_owned_by 'root' }
   end
 
   describe file('/var/log/raspi_weather_webservice_api.log') do
