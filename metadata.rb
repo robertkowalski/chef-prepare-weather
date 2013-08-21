@@ -9,5 +9,5 @@ recipe            'chef-prepare-weather::default', 'Prepares everything the weat
 
 supports 'raspbian'
 
-depends 'nodejs'
+depends 'nodejs', '= 1.3.0' # https://github.com/mdxp/nodejs-cookbook/
 depends 'ssh_known_hosts'
