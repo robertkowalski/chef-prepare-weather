@@ -76,9 +76,8 @@ include_recipe 'nodejs::install_from_binary'
 include_recipe 'ssh_known_hosts'
 ssh_known_hosts_entry 'github.com'
 
-cmd  = "npm install -g forever"
-execute "install NPM package forever" do
-  command cmd
+execute 'install NPM package forever' do
+  command 'npm install -g forever'
 end
 
 file '/var/log/raspi_weather_webservice_api.log' do
@@ -129,4 +128,10 @@ deploy '/var/www/raspi-weather-webservice-api' do
   create_dirs_before_symlink.clear
   purge_before_symlink.clear
   symlinks.clear
+end
+
+
+service 'nginx' do
+  supports :status => true, :restart => true
+  action [ :restart ]
 end
