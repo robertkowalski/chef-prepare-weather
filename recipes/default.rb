@@ -17,6 +17,17 @@
 # limitations under the License.
 #
 
+# testability on vagrant-debian
+if node['kernel']['machine'] =~ /armv6l/
+  execute 'load modules' do
+    command 'modprobe w1-gpio'
+  end
+
+  execute 'load modules' do
+    command 'modprobe w1-therm'
+  end
+end
+
 user 'node' do
   action :create
   home '/home/node'
