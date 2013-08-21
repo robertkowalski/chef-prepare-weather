@@ -52,8 +52,13 @@ cron 'temp_to_csv' do
   user 'node'
 end
 
-include_recipe 'nginx'
-include_recipe 'git'
+package 'nginx' do
+  action :install
+end
+
+package 'git' do
+  action :install
+end
 
 include_recipe 'nodejs::install_from_binary'
 

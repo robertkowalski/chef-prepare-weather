@@ -9,7 +9,5 @@ recipe            'chef-prepare-weather::default', 'Prepares everything the weat
 
 supports 'raspbian'
 
-depends 'nginx'
-depends 'git'
 depends 'nodejs'
 depends 'ssh_known_hosts'
