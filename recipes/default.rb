@@ -130,8 +130,12 @@ deploy '/var/www/raspi-weather-webservice-api' do
   symlinks.clear
 end
 
-
 service 'nginx' do
   supports :status => true, :restart => true
   action [ :restart ]
+end
+
+service 'raspi_weather_webservice_api' do
+  supports :status => true, :restart => true
+  action [ :enable, :start ]
 end
