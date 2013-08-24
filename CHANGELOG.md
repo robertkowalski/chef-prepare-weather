@@ -1,3 +1,12 @@
+1.0.4
+---
+ - install nginx
+ - install git
+ - readd travis
+ - install node.js
+ - add github to known hosts
+ - add forever and deployment of /api
+
 1.0.3
 ---
  - create /var/www (Webservices)

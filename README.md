@@ -3,6 +3,11 @@
 chef-prepare-weather
 ===
 
+Depends:
+---
+
+nodejs (1.3.0)
+ssh_known_hosts
 
 License and Author
 ---
