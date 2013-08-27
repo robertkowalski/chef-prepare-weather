@@ -10,7 +10,7 @@ LOGFILE=/var/log/<%= @app %>.log
 
 function start_app {
   echo "starting <%= @app %>"
-  forever --pidFile $PIDFILE --sourceDir $DIR -a -l $LOGFILE start $APP_FILE
+  <%= @env %> forever --pidFile $PIDFILE --sourceDir $DIR -a -l $LOGFILE start $APP_FILE
 }
 
 function stop_app {

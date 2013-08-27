@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+DIRECTORY = 'downloads' #d irectory for the ecstatic server
 
 def deploy_service(path, git_url, service_name=nil)
   deploy path do
@@ -76,22 +77,8 @@ execute 'install NPM package forever' do
   command 'npm install -g forever'
 end
 
-file '/var/log/raspi-weather-webservice-api.log' do
-  owner 'node'
-  group 'root'
-  action :create
-end
-
-template 'service' do
-  path '/etc/init.d/raspi-weather-webservice-api'
-  source 'service.erb'
-  owner 'root'
-  group 'root'
-  mode  '0755'
-  variables({
-    :app => 'raspi-weather-webservice-api',
-    :serverfile => 'app.js'
-  })
+file '/etc/nginx/sites-enabled/default' do
+  action :delete
 end
 
 directory '/data' do
@@ -106,30 +93,68 @@ directory '/var/www' do
   action :create
 end
 
+%w{/var/log/raspi-weather-webservice-api.log /var/log/raspi-weather-webservice-static.log}.each do |log|
+  file log do
+    owner 'node'
+    group 'root'
+    action :create
+  end
+end
+
 file '/var/log/templogger.log' do
   owner 'node'
   group 'root'
   action :create
 end
 
-file '/etc/nginx/sites-enabled/default' do
-  action :delete
+template 'raspi-weather-webservice-api-service' do
+  path '/etc/init.d/raspi-weather-webservice-api'
+  source 'service.erb'
+  owner 'root'
+  group 'root'
+  mode  '0755'
+  variables({
+    :app => 'raspi-weather-webservice-api',
+    :serverfile => 'app.js',
+    :env => ''
+  })
 end
 
-template 'raspi-weather-webservice-api' do
-  path '/etc/nginx/sites-available/weather-api'
+template 'raspi-weather-webservice-static-service' do
+  path '/etc/init.d/raspi-weather-webservice-static'
+  source 'service.erb'
+  owner 'root'
+  group 'root'
+  mode  '0755'
+  variables({
+    :app => 'raspi-weather-webservice-static',
+    :serverfile => 'app.js',
+    :env => 'BASEDIR=' + DIRECTORY
+  })
+end
+
+template 'raspi-weather-nginx' do
+  path '/etc/nginx/sites-available/weather'
   source 'site.erb'
   owner 'root'
   group 'root'
+  variables({
+    :basedir => DIRECTORY
+  })
 end
 
-link '/etc/nginx/sites-enabled/weather-api' do
-  to '/etc/nginx/sites-available/weather-api'
+
+link '/etc/nginx/sites-enabled/weather' do
+  to '/etc/nginx/sites-available/weather'
 end
 
 deploy_service('/var/www/raspi-weather-webservice-api',
                'https://github.com/robertkowalski/raspi-weather-webservice-api.git',
                'raspi-weather-webservice-api')
+
+deploy_service('/var/www/raspi-weather-webservice-static',
+               'https://github.com/robertkowalski/raspi-weather-webservice-static.git',
+               'raspi-weather-webservice-static')
 
 service 'nginx' do
   supports :status => true, :restart => true

@@ -1,15 +1,11 @@
-upstream test_url {
-  server 127.0.0.1:1338;
-}
-
 server {
   server_name _;
   listen 80;
-  root /var/www/raspi-weather-webservice-api/current;
+  root /var/www/;
   index index.htm;
 
-  error_log  /var/log/error.raspi-weather-webservice-api.log;
-  access_log  /var/log/access.raspi-weather-webservice-api.log;
+  error_log  /var/log/error.nginx.log;
+  access_log  /var/log/access.nginx.log;
 
   location /api {
     proxy_set_header X-Real-IP $remote_addr;
@@ -17,7 +13,17 @@ server {
     proxy_set_header Host $http_host;
     proxy_set_header X-NginX-Proxy true;
 
-    proxy_pass http://test_url/;
+    proxy_pass http://127.0.0.1:1338;
+    proxy_redirect off;
+  }
+
+  location /<%= @basedir %> {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+
+    proxy_pass http://127.0.0.1:1337;
     proxy_redirect off;
   }
 }

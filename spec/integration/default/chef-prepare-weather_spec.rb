@@ -48,11 +48,20 @@ describe 'raspberry pi' do
     it { should be_owned_by 'node' }
   end
 
-  describe file('/etc/nginx/sites-available/weather-api') do
+  describe file('/etc/nginx/sites-available/weather') do
     it { should be_file }
   end
 
-  describe file('/etc/nginx/sites-enabled/weather-api') do
+  describe file('/etc/nginx/sites-enabled/weather') do
     it { should be_file }
+  end
+
+  describe file('/var/log/raspi-weather-webservice-static.log') do
+    it { should be_file }
+    it { should be_owned_by 'node' }
+  end
+
+  describe file('/var/www/raspi-weather-webservice-static') do
+    it { should be_directory }
   end
 end
