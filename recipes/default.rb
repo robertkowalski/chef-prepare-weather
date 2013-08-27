@@ -136,9 +136,11 @@ service 'nginx' do
   action [ :restart ]
 end
 
+deploy_service('/home/node/raspi-temp-logger/', 'https://github.com/robertkowalski/raspi-temp-logger.git')
+
 cron 'temp_to_csv' do
   minute '0'
-  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /var/log/templogger.log 2>&1'
+  command '/usr/local/bin/node /home/node/raspi-temp-logger/current/index.js >> /var/log/templogger.log 2>&1'
   action :create
   user 'node'
 end
