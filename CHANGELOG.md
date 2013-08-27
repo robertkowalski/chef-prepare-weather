@@ -1,3 +1,9 @@
+1.0.5
+---
+ - deploy csv-logger
+ - deploy static webserver: /downloads
+ - DRY up code
+
 1.0.4
 ---
  - install nginx
