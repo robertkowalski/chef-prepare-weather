@@ -17,6 +17,31 @@
 # limitations under the License.
 #
 
+
+def deploy_service(path, git_url, service_name=nil)
+  deploy path do
+    repo git_url
+    revision 'HEAD'
+    enable_submodules true
+    shallow_clone true
+    keep_releases 10
+    action :deploy
+    migrate false
+    restart_command do
+      service service_name do
+        supports :start => true, :stop => true, :restart => true, :status => true
+        action [ :enable, :restart ]
+        not_if { service_name == nil }
+      end
+    end
+    scm_provider Chef::Provider::Git
+    symlink_before_migrate.clear
+    create_dirs_before_symlink.clear
+    purge_before_symlink.clear
+    symlinks.clear
+  end
+end
+
 # testability on vagrant-debian
 if node['kernel']['machine'] =~ /armv6l/
   execute 'load modules' do
@@ -32,35 +57,6 @@ user 'node' do
   action :create
   home '/home/node'
   supports :manage_home => true
-end
-
-# create directory /data
-directory '/data' do
-  owner 'node'
-  group 'www-data'
-  action :create
-end
-
-# create directory /var/www
-directory '/var/www' do
-  owner 'node'
-  group 'www-data'
-  action :create
-end
-
-# create file /var/log/templogger.log
-file '/var/log/templogger.log' do
-  owner 'node'
-  group 'root'
-  action :create
-end
-
-# add cronjob
-cron 'temp_to_csv' do
-  minute '0'
-  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /var/log/templogger.log 2>&1'
-  action :create
-  user 'node'
 end
 
 package 'nginx' do
@@ -80,23 +76,40 @@ execute 'install NPM package forever' do
   command 'npm install -g forever'
 end
 
-file '/var/log/raspi_weather_webservice_api.log' do
+file '/var/log/raspi-weather-webservice-api.log' do
   owner 'node'
   group 'root'
   action :create
 end
 
 template 'service' do
-  path '/etc/init.d/raspi_weather_webservice_api'
+  path '/etc/init.d/raspi-weather-webservice-api'
   source 'service.erb'
   owner 'root'
   group 'root'
   mode  '0755'
   variables({
-    :appname => 'raspi_weather_webservice_api',
-    :appdir => 'raspi-weather-webservice-api',
+    :app => 'raspi-weather-webservice-api',
     :serverfile => 'app.js'
   })
+end
+
+directory '/data' do
+  owner 'node'
+  group 'www-data'
+  action :create
+end
+
+directory '/var/www' do
+  owner 'node'
+  group 'www-data'
+  action :create
+end
+
+file '/var/log/templogger.log' do
+  owner 'node'
+  group 'root'
+  action :create
 end
 
 file '/etc/nginx/sites-enabled/default' do
@@ -104,40 +117,28 @@ file '/etc/nginx/sites-enabled/default' do
 end
 
 template 'raspi-weather-webservice-api' do
-  path '/etc/nginx/sites-available/weather_api'
+  path '/etc/nginx/sites-available/weather-api'
   source 'site.erb'
   owner 'root'
   group 'root'
 end
 
-link '/etc/nginx/sites-enabled/weather_api' do
-  to '/etc/nginx/sites-available/weather_api'
+link '/etc/nginx/sites-enabled/weather-api' do
+  to '/etc/nginx/sites-available/weather-api'
 end
 
-deploy '/var/www/raspi-weather-webservice-api' do
-  repo 'https://github.com/robertkowalski/raspi-weather-webservice-api.git'
-  revision 'HEAD'
-  enable_submodules true
-  shallow_clone true
-  keep_releases 10
-  action :deploy
-  migrate false
-  restart_command do
-    service 'raspi_weather_webservice_api' do
-      supports :start => true, :stop => true, :restart => true, :status => true
-      action [ :enable, :restart ]
-    end
-  end
-  scm_provider Chef::Provider::Git
-  symlink_before_migrate.clear
-  create_dirs_before_symlink.clear
-  purge_before_symlink.clear
-  symlinks.clear
-end
+deploy_service('/var/www/raspi-weather-webservice-api',
+               'https://github.com/robertkowalski/raspi-weather-webservice-api.git',
+               'raspi-weather-webservice-api')
 
 service 'nginx' do
   supports :status => true, :restart => true
   action [ :restart ]
 end
 
-
+cron 'temp_to_csv' do
+  minute '0'
+  command '/opt/node/bin/node /home/pi/node_modules/raspi-temp-logger/index.js >> /var/log/templogger.log 2>&1'
+  action :create
+  user 'node'
+end

@@ -38,21 +38,21 @@ describe 'raspberry pi' do
     it { should be_directory }
   end
 
-  describe file('/etc/init.d/raspi_weather_webservice_api') do
+  describe file('/etc/init.d/raspi-weather-webservice-api') do
     it { should be_file }
     it { should be_owned_by 'root' }
   end
 
-  describe file('/var/log/raspi_weather_webservice_api.log') do
+  describe file('/var/log/raspi-weather-webservice-api.log') do
     it { should be_file }
     it { should be_owned_by 'node' }
   end
 
-  describe file('/etc/nginx/sites-available/weather_api') do
+  describe file('/etc/nginx/sites-available/weather-api') do
     it { should be_file }
   end
 
-  describe file('/etc/nginx/sites-enabled/weather_api') do
+  describe file('/etc/nginx/sites-enabled/weather-api') do
     it { should be_file }
   end
 end
